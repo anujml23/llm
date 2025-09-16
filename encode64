@@ -1,0 +1,24 @@
+import cv2
+import base64
+import numpy as np
+
+# Your base64 image string (without the data:image/... prefix)
+base64_string = "your_base64_string_here"
+
+# If your base64 string includes the prefix like 'data:image/png;base64,...', remove it:
+if base64_string.startswith("data:image"):
+    base64_string = base64_string.split(",")[1]
+
+# Decode base64 to bytes
+image_data = base64.b64decode(base64_string)
+
+# Convert bytes to numpy array
+np_arr = np.frombuffer(image_data, np.uint8)
+
+# Decode image array to OpenCV image
+img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # Or IMREAD_UNCHANGED
+
+# Save image to file
+cv2.imwrite("output_image.png", img)
+
+print("Image saved as output_image.png")
