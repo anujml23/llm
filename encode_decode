@@ -1,0 +1,28 @@
+import cv2
+import base64
+import numpy as np
+
+def encode_image(img):
+    success, encoded_image = cv2.imencode(".jpg", img)
+    if not success:
+        raise ValueError("Failed to encode image")
+    return base64.b64encode(encoded_image.tobytes()).decode('utf-8')
+
+def decode_image(base64_string):
+    image_data = base64.b64decode(base64_string)
+    np_arr = np.frombuffer(image_data, np.uint8)
+    return cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+# Read original image
+img = cv2.imread("your_image.jpg")
+
+# Encode to base64
+base64_str = encode_image(img)
+
+# Decode back to image
+decoded_img = decode_image(base64_str)
+
+# Save decoded image
+cv2.imwrite("decoded_output.jpg", decoded_img)
+
+print("Image successfully encoded, decoded, and saved.")
